@@ -1,10 +1,10 @@
 import { colors } from '@/constants/theme';
-import { useSignUp, useOAuth } from '@clerk/clerk-expo';
-import { Link, useRouter } from 'expo-router';
-import React from 'react';
-import { Alert, Image, Pressable, StyleSheet, TextInput, View, Text } from 'react-native';
+import { useOAuth, useSignUp } from '@clerk/clerk-expo';
 import { AntDesign } from '@expo/vector-icons';
+import { Link, useRouter } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
+import React, { useEffect, useState } from 'react';
+import { Alert, Dimensions, Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -13,11 +13,22 @@ export default function SignUpPageWeb() {
   const { startOAuthFlow } = useOAuth({ strategy: 'oauth_google' });
   const router = useRouter();
 
+  const [dimensions, setDimensions] = useState(Dimensions.get('window'));
   const [emailAddress, setEmailAddress] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [pendingVerification, setPendingVerification] = React.useState(false);
   const [code, setCode] = React.useState('');
   const [loading, setLoading] = React.useState(false);
+
+  useEffect(() => {
+    const subscription = Dimensions.addEventListener('change', ({ window }) => {
+      setDimensions(window);
+    });
+    return () => subscription?.remove();
+  }, []);
+
+  const { width } = dimensions;
+  const isMobile = width < 768;
 
   const onGoogleSignUp = async () => {
     try {
@@ -79,11 +90,11 @@ export default function SignUpPageWeb() {
 
   if (pendingVerification) {
     return (
-      <View style={styles.container}>
-        <View style={styles.formSide}>
+      <View style={[styles.container, isMobile && styles.containerMobile]}>
+        <View style={[styles.formSide, isMobile && styles.formSideMobile]}>
           <View style={styles.formContainer}>
-            <Text style={styles.title}>Verify your email</Text>
-            <Text style={styles.subtitle}>
+            <Text style={[styles.title, isMobile && styles.titleMobile]}>Verify your email</Text>
+            <Text style={[styles.subtitle, isMobile && styles.subtitleMobile]}>
               We sent a code to {emailAddress}
             </Text>
             <TextInput
@@ -109,23 +120,25 @@ export default function SignUpPageWeb() {
             </Pressable>
           </View>
         </View>
-        <View style={styles.imageSide}>
-          <Image 
-            source={require('../../assets/images/webimage.png.jpg')}
-            style={styles.image}
-            resizeMode="cover"
-          />
-        </View>
+        {!isMobile && (
+          <View style={styles.imageSide}>
+            <Image 
+              source={require('../../assets/images/webimage.png.jpg')}
+              style={styles.image}
+              resizeMode="cover"
+            />
+          </View>
+        )}
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, isMobile && styles.containerMobile]}>
       {/* Left Side - Form */}
-      <View style={styles.formSide}>
+      <View style={[styles.formSide, isMobile && styles.formSideMobile]}>
         <View style={styles.formContainer}>
-          <Text style={styles.title}>Sign up for QuranMatch</Text>
+          <Text style={[styles.title, isMobile && styles.titleMobile]}>Sign up for QuranMatch</Text>
 
           <Pressable 
             style={({ pressed }) => [styles.googleButton, pressed && styles.buttonPressed]}
@@ -186,13 +199,15 @@ export default function SignUpPageWeb() {
       </View>
 
       {/* Right Side - Image */}
-      <View style={styles.imageSide}>
-        <Image 
-          source={require('../../assets/images/webimage.png.jpg')}
-          style={styles.image}
-          resizeMode="cover"
-        />
-      </View>
+      {!isMobile && (
+        <View style={styles.imageSide}>
+          <Image 
+            source={require('../../assets/images/webimage.png.jpg')}
+            style={styles.image}
+            resizeMode="cover"
+          />
+        </View>
+      )}
     </View>
   );
 }
@@ -203,12 +218,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: colors.background,
   },
+  containerMobile: {
+    flexDirection: 'column',
+  },
   formSide: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 40,
     maxWidth: 500,
+  },
+  formSideMobile: {
+    maxWidth: '100%',
+    padding: 20,
+    paddingTop: 60,
   },
   formContainer: {
     width: '100%',
@@ -229,11 +252,18 @@ const styles = StyleSheet.create({
     marginBottom: 32,
     textAlign: 'center',
   },
+  titleMobile: {
+    fontSize: 24,
+    marginBottom: 24,
+  },
   subtitle: {
     fontSize: 16,
     color: colors.textMuted,
     marginBottom: 24,
     textAlign: 'center',
+  },
+  subtitleMobile: {
+    fontSize: 14,
   },
   googleButton: {
     flexDirection: 'row',

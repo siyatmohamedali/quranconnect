@@ -3,8 +3,8 @@ import { useOAuth, useSignIn } from '@clerk/clerk-expo';
 import { AntDesign } from '@expo/vector-icons';
 import { Link, useRouter } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
-import React from 'react';
-import { Alert, Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Alert, Dimensions, Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -13,9 +13,20 @@ export default function SignInPageWeb() {
   const { startOAuthFlow } = useOAuth({ strategy: 'oauth_google' });
   const router = useRouter();
 
+  const [dimensions, setDimensions] = useState(Dimensions.get('window'));
   const [emailAddress, setEmailAddress] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [loading, setLoading] = React.useState(false);
+
+  useEffect(() => {
+    const subscription = Dimensions.addEventListener('change', ({ window }) => {
+      setDimensions(window);
+    });
+    return () => subscription?.remove();
+  }, []);
+
+  const { width } = dimensions;
+  const isMobile = width < 768;
 
   const onGoogleSignIn = async () => {
     try {
@@ -57,11 +68,11 @@ export default function SignInPageWeb() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, isMobile && styles.containerMobile]}>
       {/* Left Side - Form */}
-      <View style={styles.formSide}>
+      <View style={[styles.formSide, isMobile && styles.formSideMobile]}>
         <View style={styles.formContainer}>
-          <Text style={styles.title}>Sign in to QuranMatch</Text>
+          <Text style={[styles.title, isMobile && styles.titleMobile]}>Sign in to QuranMatch</Text>
 
           <Pressable 
             style={({ pressed }) => [styles.googleButton, pressed && styles.buttonPressed]}
@@ -122,13 +133,15 @@ export default function SignInPageWeb() {
       </View>
 
       {/* Right Side - Image */}
-      <View style={styles.imageSide}>
-        <Image 
-          source={require('../../assets/images/webimage.png.jpg')}
-          style={styles.image}
-          resizeMode="cover"
-        />
-      </View>
+      {!isMobile && (
+        <View style={styles.imageSide}>
+          <Image 
+            source={require('../../assets/images/webimage.png.jpg')}
+            style={styles.image}
+            resizeMode="cover"
+          />
+        </View>
+      )}
     </View>
   );
 }
@@ -139,12 +152,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: colors.background,
   },
+  containerMobile: {
+    flexDirection: 'column',
+  },
   formSide: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 40,
     maxWidth: 500,
+  },
+  formSideMobile: {
+    maxWidth: '100%',
+    padding: 20,
+    paddingTop: 60,
   },
   formContainer: {
     width: '100%',
@@ -164,6 +185,10 @@ const styles = StyleSheet.create({
     color: colors.text,
     marginBottom: 32,
     textAlign: 'center',
+  },
+  titleMobile: {
+    fontSize: 24,
+    marginBottom: 24,
   },
   googleButton: {
     flexDirection: 'row',

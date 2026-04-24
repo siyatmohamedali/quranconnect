@@ -151,6 +151,11 @@ export default function LandingPage() {
       position: 'relative',
       width: '100%',
     },
+    mobileImageContainer: {
+      width: '100%',
+      alignItems: 'center',
+      marginTop: 20,
+    },
     circleFrame: {
       width: isMobile ? Math.min(width - 40, 320) : isTablet ? 350 : 450,
       height: isMobile ? Math.min(width - 40, 320) : isTablet ? 350 : 450,
@@ -557,6 +562,22 @@ export default function LandingPage() {
                   </Text>
                 </View>
               )}
+            </View>
+          )}
+          
+          {/* Mobile Image */}
+          {isMobile && (
+            <View style={styles.mobileImageContainer}>
+              <View style={styles.circleFrame}>
+                <View style={styles.imagePlaceholder}>
+                   <Image 
+                     source={{ uri: 'https://i.ibb.co/dsxNRk6V/1000367978.jpg' }}
+                     style={styles.circleImage}
+                     resizeMode="cover"
+                   />
+                   <View style={styles.overlayGradient} />
+                </View>
+              </View>
             </View>
           )}
         </View>
