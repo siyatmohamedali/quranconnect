@@ -1,53 +1,71 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
+// constants/theme.ts
 
-import { Platform } from 'react-native';
-
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
-
-export const Colors = {
-  light: {
-    text: '#11181C',
-    background: '#fff',
-    tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
-  },
-  dark: {
-    text: '#ECEDEE',
-    background: '#151718',
-    tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
-  },
+export const colors = {
+  // Core Palette
+  primary: '#FFE600',    // Vivid Yellow
+  background: '#000000', // Rich Black
+  surface: '#1A1A1A',    // Dark Charcoal
+  border: '#333333',
+  
+  // Accents
+  gold: '#FFD700',
+  emerald: '#10B981',
+  purple: '#A855F7',     // From your onboarding image
+  
+  // Text & Utils
+  text: '#FFFFFF',
+  textMuted: '#737373',
+  black: '#000000',      // Fixed: Property 'black' now exists
 };
 
-export const Fonts = Platform.select({
-  ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
-    sans: 'system-ui',
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
-    serif: 'ui-serif',
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
-    rounded: 'ui-rounded',
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
-    mono: 'ui-monospace',
+export const spacing = {
+  xs: 4,
+  sm: 8,
+  md: 16,
+  lg: 24,
+  xl: 32,
+};
+
+export const borderRadius = { // Fixed: Member 'borderRadius' now exported
+  sm: 4,
+  md: 8,
+  lg: 12,
+  xl: 20,
+  round: 9999,
+};
+
+export const typography = {
+  heading1: {
+    fontSize: 32,
+    fontWeight: '800' as const,
   },
-  default: {
-    sans: 'normal',
-    serif: 'serif',
-    rounded: 'normal',
-    mono: 'monospace',
+  heading2: {
+    fontSize: 24,
+    fontWeight: '700' as const,
   },
-  web: {
-    sans: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-    serif: "Georgia, 'Times New Roman', serif",
-    rounded: "'SF Pro Rounded', 'Hiragino Maru Gothic ProN', Meiryo, 'MS PGothic', sans-serif",
-    mono: "SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+  bodySmall: { // Fixed: Property 'bodySmall' now exists
+    fontSize: 14,
+    fontWeight: '400' as const,
   },
-});
+  caption: {
+    fontSize: 12,
+    fontWeight: '500' as const,
+    textTransform: 'uppercase' as const,
+  },
+};
+export const shadows = {
+  sm: {
+    shadowColor: '#000000',
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+    elevation: 5,
+  },
+  md: {
+    shadowColor: '#000000',
+    shadowOffset: { width: 8, height: 8 },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+    elevation: 10,
+  },
+};

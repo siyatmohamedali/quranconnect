@@ -1,0 +1,7 @@
+.agents/
+.kiro/
+.cursor/
+node_modules/
+.expo/
+.next/
+dist/
